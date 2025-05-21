@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Votos dos times</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Escolha sua carta favorita!</h1>
+    
+    <div id="cartas">
+    <button class="vermelho" onclick="votar('vermelho')">Vermelho</button>
+    <button class="azul" onclick="votar('azul')">Azul</button>
+</div>
+
+<h2>Votos em tempo real:</h2>
+<ul>
+    <li>Vermelho: <span id="vermelho">{{ votos['vermelho'] }}</span></li>
+    <li>Azul: <span id="azul">{{ votos['azul'] }}</span></li>
+</ul>
+
+
+    <script>
+        const socket = io();
+
+        function votar(carta) {
+            socket.emit('votar', { carta: carta });
+        }
+
+        socket.on('atualizar_votos', function(votos) {
+            document.getElementById('azul').textContent = votos.azul;
+            document.getElementById('vermelho').textContent = votos.vermelho;
+        });
+    </script>
+</body>
+</html>
